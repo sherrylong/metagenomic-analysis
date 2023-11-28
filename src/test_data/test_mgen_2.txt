@@ -1,10 +1,12 @@
 @fasta header
+GATTACA
+@fasta header
 TACCATA
-@fasta header
-CACATAG
-@fasta header
-CCATTAC
 @fasta header
 CGAGGAT
 @fasta header
+CACATAG
+@fasta header
 CATTTAC
+@fasta header
+TTAGCTA
