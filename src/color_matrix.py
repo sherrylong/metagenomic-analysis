@@ -1,6 +1,8 @@
 class ColorMatrix:
     g_paths = list()
     mg_paths = list()
+    g_kmer_dict = dict()
+    mg_kmer_dict = dict()
     g_kmers = set()
     mg_kmers = set()
     matrix = dict()
@@ -18,21 +20,29 @@ class ColorMatrix:
     def count_genome_kmers(self, k):
         for path in self.g_paths:
             with open(path) as f:
-                seq = f.readline()
-                while seq:
-                    seq = f.readline().strip()
-                    for i in range(len(seq)+1-k):
-                        self.g_kmers.add(seq[i:i+k])
+                line = f.readline() # skips header
+                while line:
+                    line = f.readline().strip() # extracts line
+                    for i in range(len(line)+1-k):
+                        seq = line[i:i+k] # extracts k-mer
+                        if (seq in self.g_kmer_dict): 
+                            self.g_kmer_dict[seq] = self.g_kmer_dict[seq] + 1 # counts frequency of k-mer
+                        else:
+                            self.g_kmer_dict[seq] = 1
     
     def count_metagenome_kmers(self, k):
         for path in self.mg_paths:
             with open(path) as f:
-                seq = f.readline()
-                while seq:
-                    seq = f.readline().strip()
-                    for i in range(len(seq)+1-k):
-                        self.mg_kmers.add(seq[i:i+k])
-                    seq = f.readline()
+                line = f.readline() # skips header
+                while line:
+                    line = f.readline().strip() # extracts line
+                    for i in range(len(line)+1-k):
+                        seq = line[i:i+k] # extracts k-mer
+                        if (seq in self.mg_kmer_dict):
+                            self.mg_kmer_dict[seq] = self.mg_kmer_dict[seq] + 1 # counts frequency of k-mer
+                        else:
+                            self.mg_kmer_dict[seq] = 1
+                    line = f.readline() # skips header
 
 
     def print_all(self):
