@@ -1,0 +1,8 @@
+@fasta header
+CACATAG
+@fasta header
+CATTTAC
+@fasta header
+GATCCAT
+@fasta header
+TTAGCTA

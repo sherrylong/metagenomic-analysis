@@ -1,6 +1,0 @@
-@fasta header
-GATTACA
-@fasta header
-TACCATA
-@fasta header
-CACATAG

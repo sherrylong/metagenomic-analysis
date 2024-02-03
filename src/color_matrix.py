@@ -1,10 +1,8 @@
 class ColorMatrix:
     g_paths = list()
     mg_paths = list()
-    g_kmer_dict = dict()
-    mg_kmer_dict = dict()
-    g_kmers = set()
-    mg_kmers = set()
+    g_kmers = list()
+    mg_kmers = dict()
     matrix = dict()
 
     def __init__(self, g_paths, mg_paths):
@@ -19,16 +17,18 @@ class ColorMatrix:
 
     def count_genome_kmers(self, k):
         for path in self.g_paths:
+            kmers = dict()
             with open(path) as f:
                 line = f.readline() # skips header
                 while line:
                     line = f.readline().strip() # extracts line
                     for i in range(len(line)+1-k):
                         seq = line[i:i+k] # extracts k-mer
-                        if (seq in self.g_kmer_dict): 
-                            self.g_kmer_dict[seq] = self.g_kmer_dict[seq] + 1 # counts frequency of k-mer
+                        if (seq in kmers): 
+                            kmers[seq] = kmers[seq] + 1 # counts frequency of k-mer
                         else:
-                            self.g_kmer_dict[seq] = 1
+                            kmers[seq] = 1
+                self.g_kmers.append(kmers)
     
     def count_metagenome_kmers(self, k):
         for path in self.mg_paths:
@@ -38,24 +38,43 @@ class ColorMatrix:
                     line = f.readline().strip() # extracts line
                     for i in range(len(line)+1-k):
                         seq = line[i:i+k] # extracts k-mer
-                        if (seq in self.mg_kmer_dict):
-                            self.mg_kmer_dict[seq] = self.mg_kmer_dict[seq] + 1 # counts frequency of k-mer
+                        if (seq in self.mg_kmers):
+                            self.mg_kmers[seq] = self.mg_kmers[seq] + 1 # counts frequency of k-mer
                         else:
-                            self.mg_kmer_dict[seq] = 1
+                            self.mg_kmers[seq] = 1
                     line = f.readline() # skips header
+
+    def write(self, path):
+        w = open(path, 'w')
+        for kmer in self.mg_kmers:
+            w.write(kmer + '\n')
+        w.close()
+
+    def build(self, path):
+        w = open(path, 'w')
+        for path in self.g_paths:
+            w.write(path + ' ')
+        w.write('\n')
+        for mg_kmer in self.mg_kmers:
+            for g_kmer_dict in self.g_kmers:
+                if (mg_kmer in g_kmer_dict):
+                    w.write('1 ')
+                else:
+                    w.write('0 ')
+            w.write('\n')
+        w.close()
 
 
     def print_all(self):
-        print("GENOMES")
-        for path in self.g_paths:
-            print(path)
-        print("GENOME KMERS")
-        for kmer in self.g_kmers:
-            print(kmer)
-        print()
+        # print("GENOMES")
+        # for path in self.g_paths:
+        #     print(path)
+        # print("GENOME KMERS")
+        # for kmer in self.g_kmers:
+        #     print(kmer)
+        # print()
         print("METAGENOMES")
         for path in self.mg_paths:
             print(path)
         print("METAGENOME KMERS")
-        for kmer in self.mg_kmers:
-            print(kmer)
+        print(self.mg_kmers)
