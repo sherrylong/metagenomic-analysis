@@ -44,37 +44,33 @@ class ColorMatrix:
                             self.mg_kmers[seq] = 1
                     line = f.readline() # skips header
 
-    def write(self, path):
+    def build(self):
+        for mg_kmer in self.mg_kmers:
+            row = list() 
+            for g_kmer_dict in self.g_kmers:
+                if (mg_kmer in g_kmer_dict): # checks presence of k-mer in genome
+                    row.append(1)
+                else:
+                    row.append(0)
+            self.matrix[mg_kmer] = row # stores row with k-mer as key
+
+    def write_kmers(self, path): # writes metagenome k-mers to file
         w = open(path, 'w')
         for kmer in self.mg_kmers:
             w.write(kmer + '\n')
         w.close()
 
-    def build(self, path):
+    def write_matrix(self, path): # writes color matrix to file
         w = open(path, 'w')
         for path in self.g_paths:
             w.write(path + ' ')
         w.write('\n')
-        for mg_kmer in self.mg_kmers:
-            for g_kmer_dict in self.g_kmers:
-                if (mg_kmer in g_kmer_dict):
-                    w.write('1 ')
-                else:
-                    w.write('0 ')
+        for row in self.matrix.values():
+            for num in row:
+                w.write(str(num) + ' ')
             w.write('\n')
         w.close()
 
-
-    def print_all(self):
-        # print("GENOMES")
-        # for path in self.g_paths:
-        #     print(path)
-        # print("GENOME KMERS")
-        # for kmer in self.g_kmers:
-        #     print(kmer)
-        # print()
-        print("METAGENOMES")
-        for path in self.mg_paths:
-            print(path)
-        print("METAGENOME KMERS")
-        print(self.mg_kmers)
+    def write(self, path):
+        self.write_kmers(path + '_kmers.txt')
+        self.write_matrix(path + '_matrix.txt')
