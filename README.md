@@ -1,1 +1,1 @@
-# metagenome-search
+# metagenomic-analysis
