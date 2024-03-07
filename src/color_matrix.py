@@ -55,7 +55,8 @@ class ColorMatrix:
                     row.append(1)
                 else:
                     row.append(0)
-            self.matrix[mg_kmer] = row # stores row with k-mer as key
+            if (len(row) == 1 or (len(row) != 1 and 0 in row)): # excludes k-mers present in all genomes
+                self.matrix[mg_kmer] = row # stores row with k-mer as key
 
     def write_kmers(self, path): # writes metagenome k-mers to file
         w = open(path, 'w')
@@ -79,9 +80,9 @@ class ColorMatrix:
         self.write_matrix(path + '_matrix.txt')
 
     def test(self):
-        total = len(self.matrix.values())
         for i in range(0, len(self.g_paths)):
             print(self.g_paths[i])
+            total = len(self.g_kmers[i].keys())
             count = 0
             for row in self.matrix.values():
                 count += row[i]
