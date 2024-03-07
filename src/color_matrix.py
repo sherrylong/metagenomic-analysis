@@ -22,6 +22,8 @@ class ColorMatrix:
                 line = f.readline() # skips header
                 while line:
                     line = f.readline().strip() # extracts line
+                    if (line == '' or line[0] == '>'):
+                        continue
                     for i in range(len(line)+1-k):
                         seq = line[i:i+k] # extracts k-mer
                         if (seq in kmers): 
@@ -29,6 +31,7 @@ class ColorMatrix:
                         else:
                             kmers[seq] = 1
                 self.g_kmers.append(kmers)
+
     
     def count_metagenome_kmers(self, k):
         for path in self.mg_paths:
@@ -52,8 +55,7 @@ class ColorMatrix:
                     row.append(1)
                 else:
                     row.append(0)
-            if 0 in row: # excludes k-mers present in all genomes
-                self.matrix[mg_kmer] = row # stores row with k-mer as key
+            self.matrix[mg_kmer] = row # stores row with k-mer as key
 
     def write_kmers(self, path): # writes metagenome k-mers to file
         w = open(path, 'w')
