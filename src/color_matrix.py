@@ -31,7 +31,6 @@ class ColorMatrix:
                         else:
                             kmers[seq] = 1
                 self.g_kmers.append(kmers)
-
     
     def count_metagenome_kmers(self, k):
         for path in self.mg_paths:
@@ -52,10 +51,10 @@ class ColorMatrix:
             row = list() 
             for g_kmer_dict in self.g_kmers:
                 if (mg_kmer in g_kmer_dict): # checks presence of k-mer in genome
-                    row.append(1)
+                    row.append(True)
                 else:
-                    row.append(0)
-            if (len(row) == 1 or (len(row) != 1 and 0 in row)): # excludes k-mers present in all genomes
+                    row.append(False)
+            if (len(row) or (len(row) != 1 and False in row)): # excludes k-mers present in all genomes
                 self.matrix[mg_kmer] = row # stores row with k-mer as key
 
     def write_kmers(self, path): # writes metagenome k-mers to file
