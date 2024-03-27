@@ -16,7 +16,7 @@ cm.build()
 cm.write('../data_out/synthetic_1')
 
 def test():
-    mg = MetagenomeGenerator(['../test_data/test_gen_1.txt', 
+    mg = SyntheticGenerator(['../test_data/test_gen_1.txt', 
                               '../test_data/test_gen_2.txt', 
                               '../test_data/test_gen_3.txt'], "../test_out/test_syn_1.txt")
     mg.generate()
