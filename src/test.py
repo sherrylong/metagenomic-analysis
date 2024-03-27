@@ -1,11 +1,11 @@
 from color_matrix import *
 from synthetic_gen import *
 
-mg = SyntheticGenerator(['../data/Bacillus mycoides.fna',
-                         '../data/Bacillus paranthracis.fna', 
-                         '../data/Bacillus safensis.fna',
-                         '../data/Bacillus subtilis.fna',
-                         '../data/Bacillus thuringiensis.fna'], '../data_out/synthetic_3.txt')
+mg = SyntheticGenerator({'../data/Bacillus mycoides.fna' : 0.5,
+                         '../data/Bacillus paranthracis.fna' : 0.6, 
+                         '../data/Bacillus safensis.fna' : 0.7,
+                         '../data/Bacillus subtilis.fna' : 0.8,
+                         '../data/Bacillus thuringiensis.fna' : 0.9}, '../data_out/synthetic_3.txt')
 mg.generate()
 
 cm = ColorMatrix(['../data/Bacillus mycoides.fna',

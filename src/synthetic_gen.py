@@ -1,11 +1,11 @@
 from random import random
 
 class SyntheticGenerator:
-    read_paths = list()
+    read_paths = dict()
     write_path = str()
 
     def __init__(self, read_paths, write_path):
-        self.read_paths = read_paths
+        self.read_paths = read_paths # path : % coverage
         self.write_path = write_path
     
     def add_genome(self, path):
@@ -18,7 +18,7 @@ class SyntheticGenerator:
                 seq = f.readline() # skips header in read
                 while seq:
                     seq = f.readline().strip() # extracts line in read
-                    if ((int(random()*10)+1) % 4 == 0 and len(seq) != 0): # 20% chance of inclusion
+                    if (random() <= self.read_paths[path] and len(seq) != 0): # inclusion based on % coverage
                         w.write('@fasta header\n') # writes header
                         w.write(seq + '\n') # writes line
         w.close()
