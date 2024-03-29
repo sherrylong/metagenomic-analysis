@@ -1,6 +1,8 @@
 from color_matrix import *
 from synthetic_gen import *
+import time
 
+start = time.time()
 mg = SyntheticGenerator({'../data/Bacillus mycoides.fna' : 0.5,
                          '../data/Bacillus paranthracis.fna' : 0.6, 
                          '../data/Bacillus safensis.fna' : 0.7,
@@ -26,5 +28,7 @@ cm.count_metagenome_kmers(50)
 print('Counted metagenome k-mers')
 cm.build()
 print('Building color matrix')
-# cm.write('../data_out/synthetic_3')
+cm.write('../data_out/synthetic_3')
 cm.test()
+end = time.time()
+print('Execution time: ' + str(end-start))
