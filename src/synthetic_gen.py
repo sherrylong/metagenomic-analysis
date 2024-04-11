@@ -1,4 +1,4 @@
-from random import random
+import random
 
 class SyntheticGenerator:
     read_paths = dict()
@@ -10,6 +10,15 @@ class SyntheticGenerator:
     
     def add_genome(self, path):
         self.read_paths.append(path)
+
+    def gen_garbage(self, line_length): # generates 200 lines of random bases
+        bases = ['A', 'T', 'G', 'C']
+        garbage_string = ''
+        for n in range(200):
+            for l in range(line_length):
+                garbage_string += random.choice(bases)
+            garbage_string += '\n'
+        return garbage_string
     
     def generate(self):
         w = open(self.write_path, 'w')
@@ -18,7 +27,8 @@ class SyntheticGenerator:
                 seq = f.readline() # skips header in read
                 while seq:
                     seq = f.readline().strip() # extracts line in read
-                    if (random() <= self.read_paths[path] and len(seq) != 0): # inclusion based on % coverage
+                    if (random.random() <= self.read_paths[path] and len(seq) != 0): # inclusion based on % coverage
                         w.write('@fasta header\n') # writes header
                         w.write(seq + '\n') # writes line
+        w.write(self.gen_garbage(101)) 
         w.close()
