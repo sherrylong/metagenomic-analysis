@@ -17,7 +17,7 @@ class SyntheticGenerator:
         for n in range(200):
             for l in range(line_length):
                 garbage_string += random.choice(bases)
-            garbage_string += '\n'
+            garbage_string += '\n@fasta header\n'
         return garbage_string
     
     def generate(self):
@@ -30,5 +30,5 @@ class SyntheticGenerator:
                     if (random.random() <= self.read_paths[path] and len(seq) != 0): # inclusion based on % coverage
                         w.write('@fasta header\n') # writes header
                         w.write(seq + '\n') # writes line
-        w.write(self.gen_garbage(101)) 
+        w.write(self.gen_garbage(80)) 
         w.close()
