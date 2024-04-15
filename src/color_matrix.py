@@ -3,8 +3,10 @@ class ColorMatrix:
     mg_paths = list()
     g_kmers = dict()
     g_lists = list()
+    g_sets = dict()
     mg_kmers = dict()
     matrix = dict()
+    reduced_matrix = dict()
 
     def __init__(self, g_paths, mg_paths):
         self.g_paths = g_paths
@@ -50,6 +52,25 @@ class ColorMatrix:
                             self.mg_kmers[seq] = 1
                     line = f.readline() # skips header
 
+    def build_g_sets(self):
+        added = False
+        for mg_kmer in self.mg_kmers:
+            if (mg_kmer in self.g_kmers): 
+                row = self.g_kmers[mg_kmer]
+                key = tuple(row)
+                if key in self.g_sets:
+                    self.g_sets[key].add(mg_kmer)
+                else:
+                    self.g_sets[key] = set()
+                    self.g_sets[key].add(mg_kmer)
+    
+    def build_reduced_matrix(self):
+        index = 0
+        for key in self.g_sets:
+            if key not in self.reduced_matrix:
+                self.reduced_matrix[index] = key
+                index += 1
+
     def build(self):
         for mg_kmer in self.mg_kmers:
             if (mg_kmer in self.g_kmers): # checks presence of k-mer in genome and excludes k-mers present in all genomes
@@ -62,6 +83,17 @@ class ColorMatrix:
         for kmer in self.mg_kmers:
             w.write(kmer + '\n')
         w.close()
+    
+    def write_kmers_with_sets(self, path):
+        w = open(path, 'w')
+        i = 1
+        for key in self.g_sets:
+            w.write("GROUP " + str(i) + " - " + str(key) + '\n')
+            for kmer in self.g_sets[key]:
+                w.write(kmer + '\n')
+            w.write(" " + '\n')
+            i += 1
+        w.close()
 
     def write_matrix(self, path): # writes color matrix to file
         w = open(path, 'w')
@@ -73,10 +105,23 @@ class ColorMatrix:
                 w.write(str(int(num)) + ' ')
             w.write('\n')
         w.close()
+    
+    def write_reduced_matrix(self, path): # writes color matrix to file
+        w = open(path, 'w')
+        for path in self.g_paths:
+            w.write(path + ' ')
+        w.write('\n')
+        for row in self.reduced_matrix.values():
+            for num in row:
+                w.write(str(int(num)) + ' ')
+            w.write('\n')
+        w.close()
 
     def write(self, path):
-        self.write_kmers(path + '_kmers.txt')
+        # self.write_kmers(path + '_kmers.txt')
+        self.write_kmers_with_sets(path + '_kmers.txt')
         self.write_matrix(path + '_matrix.txt')
+        self.write_reduced_matrix(path + '_reduced_matrix.txt')
 
     def test(self):
         for i in range(len(self.g_paths)):
