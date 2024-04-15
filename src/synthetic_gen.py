@@ -15,9 +15,10 @@ class SyntheticGenerator:
         bases = ['A', 'T', 'G', 'C']
         garbage_string = ''
         for n in range(200):
+            garbage_string += '@fasta header\n'
             for l in range(line_length):
                 garbage_string += random.choice(bases)
-            garbage_string += '\n@fasta header\n'
+            garbage_string += '\n'
         return garbage_string
     
     def generate(self):
