@@ -1,9 +1,12 @@
+import random
+
 class ColorMatrix:
     g_paths = list()
     mg_paths = list()
     g_kmers = dict()
     g_lists = list()
     g_sets = dict()
+    g_reduced_sets = dict()
     mg_kmers = dict()
     matrix = dict()
     reduced_matrix = dict()
@@ -63,7 +66,19 @@ class ColorMatrix:
                 else:
                     self.g_sets[key] = set()
                     self.g_sets[key].add(mg_kmer)
-    
+
+    def build_reduced_sets(self):
+        for i,key in enumerate(self.g_sets):
+            self.g_reduced_sets[key] = set()
+            size = max(1, int(0.01 * len(self.g_sets[key]))) # Set the desired size for reduced sets to 1% of the original set size
+            g_sets_as_list = list(self.g_sets[key])
+            
+            # print(i/len(self.g_sets))
+
+            for index in range(size):
+                self.g_reduced_sets[key].add(g_sets_as_list[index])
+
+
     def build_reduced_matrix(self):
         index = 0
         for key in self.g_sets:
@@ -94,6 +109,17 @@ class ColorMatrix:
             w.write(" " + '\n')
             i += 1
         w.close()
+    
+    def write_kmers_with_sets_reduced(self, path):
+        w = open(path, 'w')
+        i = 1
+        for key in self.g_reduced_sets:
+            w.write("GROUP " + str(i) + " - " + str(key) + '\n')
+            for kmer in self.g_reduced_sets[key]:
+                w.write(kmer + '\n')
+            w.write(" " + '\n')
+            i += 1
+        w.close()
 
     def write_matrix(self, path): # writes color matrix to file
         w = open(path, 'w')
@@ -120,6 +146,7 @@ class ColorMatrix:
     def write(self, path):
         # self.write_kmers(path + '_kmers.txt')
         self.write_kmers_with_sets(path + '_kmers.txt')
+        self.write_kmers_with_sets_reduced(path + '_reduced_kmers.txt')
         self.write_matrix(path + '_matrix.txt')
         self.write_reduced_matrix(path + '_reduced_matrix.txt')
 
