@@ -38,6 +38,6 @@ cm.build_reduced_matrix()
 print('Building reduced matrix')
 
 cm.write('../data_out/synthetic_4')
-cm.test()
+cm.test2()
 end = time.time()
 print('Execution time: ' + str(end-start))

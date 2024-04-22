@@ -162,3 +162,17 @@ class ColorMatrix:
             print('Count: ' + str(count))
             print('Total: ' + str(total))
             print('Percentage: ' + str(count/total))
+    
+    def test2(self):
+        for i in range(len(self.g_paths)):
+            print(self.g_paths[i])
+            total = 0
+            for row in self.g_kmers.values():
+                total += row[i]
+            count = 0
+            for key in self.g_reduced_sets:
+                if key[i] == 1:
+                    count += len(self.g_reduced_sets[key])
+            print('Count: ' + str(count))
+            print('Total: ' + str(total))
+            print('Percentage: ' + str(count/total))
