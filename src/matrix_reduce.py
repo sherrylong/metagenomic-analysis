@@ -1,6 +1,7 @@
 from color_matrix import *
 from synthetic_gen import *
 import time
+import random
 
 start = time.time()
 mg = SyntheticGenerator({'../data/Bacillus mycoides.fna' : 0.5,
@@ -31,6 +32,8 @@ cm.build()
 print('Built original matrix')
 cm.build_g_sets()
 print('Building dictionary for reduced matrix')
+cm.build_reduced_sets()
+print('Building dictionary for reduced sets')
 cm.build_reduced_matrix()
 print('Building reduced matrix')
 
